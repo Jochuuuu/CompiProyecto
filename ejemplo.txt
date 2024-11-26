@@ -1,22 +1,10 @@
-Program pe;
+Program a;
 
 var
-  test: integer;
-  contador: integer;
-
-function fu(): integer;
-begin
-  fu:=5;
-end;
+  a, b, c: integer;
 
 begin
-test := 1;
-  for test to 10 do
-  begin
-   writeln(test);
-  end;
-  test := ifexp(5<10,1,0);
-  writeln(test);
-  contador := 1;
-  writeln(contador*fu()*fu());
+  a := 10;
+  b := 15;
+  writeln(a + b);
 end.
