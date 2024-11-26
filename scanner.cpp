@@ -49,6 +49,10 @@ Token *Scanner::nextToken()
         {
             token = new Token(Token::IF, word, 0, word.length());
         }
+            else if (word == "to")
+        {
+            token = new Token(Token::TO, word, 0, word.length());
+        }
  else if (word == "then")
         {
             token = new Token(Token::THEN, word, 0, word.length());
@@ -58,15 +62,15 @@ Token *Scanner::nextToken()
             token = new Token(Token::ELSE, word, 0, word.length());
         }
 
-
+ else if (word == "for")
+        {
+            token = new Token(Token::FOR, word, 0, word.length());
+        }
         else if (word == "begin")
         {
             token = new Token(Token::BEGIN, word, 0, word.length());
         }
-        else if (word == "endwhile")
-        {
-            token = new Token(Token::ENDWHILE, word, 0, word.length()); // Detecta endwhile
-        }
+       
         else if (word == "end")
         {
             token = new Token(Token::END_BLOCK, word, 0, word.length()); // Detecta end

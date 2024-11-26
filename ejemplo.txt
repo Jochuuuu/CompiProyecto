@@ -10,6 +10,11 @@ begin
 end;
 
 begin
+test := 1;
+  for test to 10 do
+  begin
+   writeln(test);
+  end;
   test := ifexp(5<10,1,0);
   writeln(test);
   contador := 1;

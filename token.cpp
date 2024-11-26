@@ -31,18 +31,16 @@ std::ostream& operator<<(std::ostream& outs, const Token& tok)
         case Token::LE: outs << "TOKEN(LE)"; break;
         case Token::EQ: outs << "TOKEN(EQ)"; break;
         case Token::IF: outs << "TOKEN(IF)"; break;
-                case Token::IFEXP: outs << "TOKEN(IFEXP)"; break;
-
+        case Token::IFEXP: outs << "TOKEN(IFEXP)"; break;
         case Token::THEN: outs << "TOKEN(THEN)"; break;
         case Token::ELSE: outs << "TOKEN(ELSE)"; break;
         case Token::ENDIF: outs << "TOKEN(ENDIF)"; break;
         case Token::WHILE: outs << "TOKEN(WHILE)"; break;
         case Token::DO: outs << "TOKEN(DO)"; break;
-        case Token::ENDWHILE: outs << "TOKEN(ENDWHILE)"; break;
         case Token::COMA: outs << "TOKEN(COMA)"; break;
         case Token::VAR: outs << "TOKEN(VAR)"; break;
         case Token::FOR: outs << "TOKEN(FOR)"; break;
-        case Token::ENDFOR: outs << "TOKEN(ENDFOR)"; break;
+        case Token::TO: outs << "TOKEN(TO)"; break;
         case Token::TRUE: outs << "TOKEN(TRUE)"; break;
         case Token::FALSE: outs << "TOKEN(FALSE)"; break;
         case Token::RETURN: outs << "TOKEN(RETURN)"; break;

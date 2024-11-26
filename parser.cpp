@@ -522,36 +522,37 @@ Stm *Parser::parseStatement()
 
     else if (match(Token::FOR))
     {
-        if (!match(Token::PI))
-        {
-            cout << "Error: se esperaba '(' después de 'for'." << endl;
-            exit(1);
-        }
+       
+        if (!check(Token::ID))
+    {
+        cout << "Error: Se esperaba un identificador después de 'for'." << endl;
+        exit(1);
+    }
         Exp *start = parseCExp();
-        if (!match(Token::COMA))
+
+    // Capturar el nombre del identificador
+    string varName = previous->text; // `previous` guarda el último token válido
+    IdentifierExp *loopVar = new IdentifierExp(varName);
+        if (!match(Token::TO))
         {
-            cout << "Error: se esperaba ',' después de la expresión." << endl;
+            cout << "Error: se esperaba 'to' después de la expresión." << endl;
             exit(1);
         }
         Exp *end = parseCExp();
-        if (!match(Token::COMA))
+      if (!match(Token::DO))
         {
-            cout << "Error: se esperaba ',' después de la expresión." << endl;
+            cout << "Error: se esperaba 'do' después de la expresión." << endl;
             exit(1);
         }
-        Exp *step = parseCExp();
-        if (!match(Token::PD))
-        {
-            cout << "Error: se esperaba ')' después de la expresión." << endl;
-            exit(1);
-        }
+       
         tb = parseBody();
-        if (!match(Token::ENDFOR))
-        {
-            cout << "Error: se esperaba 'endfor' al final de la declaración." << endl;
-            exit(1);
-        }
-        s = new ForStatement(start, end, step, tb);
+     BinaryExp *increment = new BinaryExp(loopVar, new NumberExp(1), PLUS_OP); // ID + 1
+    AssignStatement *incrementStmt = new AssignStatement(varName, increment); // ID = ID + 1
+tb->slist->add(incrementStmt);
+
+    // Crear la declaración de bucle
+    s = new ForStatement(loopVar, end, new NumberExp(1), tb);
+    
     }
     else if (match(Token::RETURN))
     {

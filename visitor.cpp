@@ -233,11 +233,10 @@ void PrintVisitor::visit(ForStatement *stm)
     stm->start->accept(this);
     cout << " to ";
     stm->end->accept(this);
-    cout << " step ";
-    stm->step->accept(this);
     cout << " do" << endl;
+    cout << " begin" << endl;
     stm->b->accept(this);
-    cout << "endfor";
+    cout << "end;";
 }
 
 void PrintVisitor::visit(VarDec *stm)
