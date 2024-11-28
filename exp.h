@@ -84,7 +84,10 @@ public:
 };
 
 class Stm {
+
 public:
+        bool comentario = false;
+
     virtual int accept(Visitor* visitor) = 0;
     virtual ~Stm() = 0;
     virtual void accept(ImpValueVisitor* v) = 0;
@@ -111,6 +114,25 @@ public:
     void accept(ImpValueVisitor* v);
     void accept(TypeVisitor* v);
     ~AssignStatement();
+};
+
+class CommentStatment : public Stm {
+public:
+    
+    std::string id;
+    CommentStatment(std::string id) 
+    
+    {
+        Stm::comentario = true;
+        this->id = id;
+    }
+    int accept(Visitor* visitor);
+    void accept(ImpValueVisitor* v) {}
+    void accept(TypeVisitor* v) {}
+    ~CommentStatment()
+    {
+
+    }
 };
 
 class PrintStatement : public Stm {

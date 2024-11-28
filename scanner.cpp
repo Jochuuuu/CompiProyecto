@@ -12,9 +12,32 @@ bool is_white_space(char c)
     return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
+// lastcomneterio = true
+// a := 5; //         ddfsfd sds 
 Token *Scanner::nextToken()
 {
     Token *token;
+    if (lastcomentario && input[current] == '\n')
+    {
+        token = new Token(Token::ENDLINE);
+        lastcomentario = false;
+        return token;
+    }
+    else if (lastcomentario)
+    {
+        first = current;
+        while (current < input.length() && input[current] != '\n')
+        {
+            current++;
+        }
+
+        string word = input.substr(first, current - first);
+        token = new Token(Token::ID, word, 0, word.length());
+
+
+        return token;
+    }
+
     while (current < input.length() && is_white_space(input[current]))
         current++;
     if (current >= input.length())
@@ -41,28 +64,29 @@ Token *Scanner::nextToken()
         {
             token = new Token(Token::FUN, word, 0, word.length());
         }
+
         else if (word == "function")
         {
             token = new Token(Token::FUN, word, 0, word.length());
         }
-         else if (word == "if")
+        else if (word == "if")
         {
             token = new Token(Token::IF, word, 0, word.length());
         }
-            else if (word == "to")
+        else if (word == "to")
         {
             token = new Token(Token::TO, word, 0, word.length());
         }
- else if (word == "then")
+        else if (word == "then")
         {
             token = new Token(Token::THEN, word, 0, word.length());
         }
- else if (word == "else")
+        else if (word == "else")
         {
             token = new Token(Token::ELSE, word, 0, word.length());
         }
 
- else if (word == "for")
+        else if (word == "for")
         {
             token = new Token(Token::FOR, word, 0, word.length());
         }
@@ -70,7 +94,7 @@ Token *Scanner::nextToken()
         {
             token = new Token(Token::BEGIN, word, 0, word.length());
         }
-       
+
         else if (word == "end")
         {
             token = new Token(Token::END_BLOCK, word, 0, word.length()); // Detecta end
@@ -95,7 +119,7 @@ Token *Scanner::nextToken()
         {
             token = new Token(Token::WHILE, word, 0, word.length());
         }
-         else if (word == "ifexp")
+        else if (word == "ifexp")
         {
             token = new Token(Token::IFEXP, word, 0, word.length());
         }
@@ -130,8 +154,18 @@ Token *Scanner::nextToken()
             token = new Token(Token::MUL, c);
             break;
         case '/':
-            token = new Token(Token::DIV, c);
+            if (current + 1 < input.length() && input[current + 1] == '/')
+            {
+                token = new Token(Token::COMMENT, "//", 0, 2);
+                current++;
+                lastcomentario = true;
+            }
+            else
+            {
+                token = new Token(Token::DIV, c);
+            }
             break;
+
         case ',':
             token = new Token(Token::COMA, c);
             break;
@@ -144,12 +178,12 @@ Token *Scanner::nextToken()
         case ':':
             if (current + 1 < input.length() && input[current + 1] == '=')
             {
-                token = new Token(Token::ASSIGN, ":=", 0, 2); 
+                token = new Token(Token::ASSIGN, ":=", 0, 2);
                 current++;
             }
             else
             {
-                token = new Token(Token::COLON,c); 
+                token = new Token(Token::COLON, c);
             }
             break;
 

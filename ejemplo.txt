@@ -1,10 +1,27 @@
-Program a;
+Program FactorialProgram;
 
 var
-  a, b, c: integer;
+  a, b: integer; 
+
+function factorial(x: integer): integer;
+begin
+  if 1 < x then  
+  begin
+    factorial := x * factorial(x - 1); // nose
+  end
+  else
+  begin
+    factorial := 1;  // si ps
+  end;
+end;
 
 begin
-  a := 10;
-  b := 15;
-  writeln(a + b);
+
+
+  a := 5;
+  
+  writeln(a);
+  writeln(b);
+  b := factorial(a);
+  writeln(b); // imprime b xd
 end.

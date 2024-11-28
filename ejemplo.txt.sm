@@ -1,19 +1,69 @@
 start: skip
-enter 3
-alloc 3
+enter 2
+alloc 2
 mark
 pusha Lmain
 call
 halt
-Lmain: skip
-enter 2
+Lfactorial: skip
+enter 4
 alloc 0
-push  10
+push  1
+loadr -3
+lt
+jmpz L0
+loadr -3
+alloc 1
+loadr -3
+push  1
+sub
+mark
+pusha Lfactorial
+call
+mul
+storer -4
+return 4
+goto L1
+L0: skip
+push  1
+storer -4
+return 4
+L1: skip
+Lmain: skip
+enter 3
+alloc 0
+push  5
 store 1
-push  15
-store 2
+alloc 1
 load 1
-load 2
+storer 1
+L2: skip
+loadr 1
+push  7
+sub
+jmpz L3
+load 1
+print
+load 1
+push  1
 add
+store 1
+loadr 1
+push  1
+add
+storer 1
+goto L2
+L3: skip
+load 1
+print
+load 2
+print
+alloc 1
+load 1
+mark
+pusha Lfactorial
+call
+store 2
+load 2
 print
 return 3

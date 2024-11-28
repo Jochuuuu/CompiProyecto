@@ -6,6 +6,7 @@
 
 class Scanner {
 private:
+    bool lastcomentario = false;
     std::string input;
     int first, current;
 public:

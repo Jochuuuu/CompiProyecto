@@ -57,6 +57,13 @@ int WhileStatement::accept(Visitor *visitor)
     visitor->visit(this);
     return 0;
 }
+
+int CommentStatment::accept(Visitor *visitor)
+{
+    visitor->visit(this);
+
+    return 0;
+}
 int ForStatement::accept(Visitor *visitor)
 {
     visitor->visit(this);
@@ -156,9 +163,17 @@ void PrintVisitor::visit(AssignStatement *stm)
 
 void PrintVisitor::visit(PrintStatement *stm)
 {
+                printIndent();
+
     cout << "writeln(";
     stm->e->accept(this);
     cout << ");";
+}
+
+void PrintVisitor::visit(CommentStatment *stm)
+{
+    cout << "//";
+    cout << stm->id ;
 }
 
 void PrintVisitor::visit(IfStatement *stm)
@@ -168,13 +183,14 @@ void PrintVisitor::visit(IfStatement *stm)
     cout << " then" << endl;
     printIndent();
     cout << "begin" << endl;
-    printIndent();
 
     stm->then->accept(this);
     if (stm->els)
     {
         printIndent();
-        cout << "end" << endl;
+        cout << endl;
+                printIndent();
+                cout << "end" << endl;
         printIndent();
         cout << "else" << endl;
         printIndent();
@@ -182,7 +198,9 @@ void PrintVisitor::visit(IfStatement *stm)
         cout << "begin" << endl;
         stm->els->accept(this);
         printIndent();
-        cout << "end;";
+        cout << endl;
+                        printIndent();
+cout << "end;" << endl;
     }
     else
     {
@@ -273,17 +291,22 @@ void PrintVisitor::visit(VarDecList *stm)
     {
         printIndent();
 
-        cout << "begin " << endl;
     }
 }
 
 void PrintVisitor::visit(StatementList *stm)
 {
+    bool anterior = false;
     for (auto i : stm->stms)
     {
+        if (anterior && i->comentario == false)
+        {
+            cout << endl;
+        }
+
         printIndent();
         i->accept(this);
-        cout << endl;
+        anterior = true;
     }
 }
 
@@ -305,7 +328,6 @@ void PrintVisitor::visit(FunDec *stm)
         {
             cout << "procedure" << " " << stm->fname << "(";
         }
-       
     }
     else
     {
@@ -328,14 +350,14 @@ void PrintVisitor::visit(FunDec *stm)
     }
     else
     {
-         if (stm->fname != "main")
+        if (stm->fname != "main")
         {
-        cout << ")" << endl;
+            cout << ")" << endl;
         }
     }
     cout << "begin" << endl;
     stm->body->accept(this);
-    cout << "end";
+    cout << endl << "end";
     cout << (stm->fname == "main" ? "." : ";");
 
     currentFunction = "";
