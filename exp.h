@@ -137,8 +137,9 @@ public:
 
 class PrintStatement : public Stm {
 public:
-    Exp* e;
-    PrintStatement(Exp* e);
+  //  Exp* e;
+    list<Exp*> e;
+    PrintStatement(list<Exp*> e);
     int accept(Visitor* visitor);
     void accept(ImpValueVisitor* v);
     void accept(TypeVisitor* v);

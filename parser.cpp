@@ -460,13 +460,27 @@ Stm *Parser::parseStatement()
             cout << "Error: se esperaba un '(' después de 'print'." << endl;
             exit(1);
         }
+
+        list<Exp*> go;
+
+        
         e = parseCExp();
+
+        go.push_back(e);
+
+        while (match(Token::COMA))
+        {
+          go.push_back(parseCExp());
+
+        }
+        
+
         if (!match(Token::PD))
         {
             cout << "Error: se esperaba un ')' después de la expresión." << endl;
             exit(1);
         }
-        s = new PrintStatement(e);
+        s = new PrintStatement(go);
     }
 
     else if (check(Token::PC))

@@ -201,7 +201,12 @@ void ImpTypeChecker::visit(AssignStatement* s) {
 }
 
 void ImpTypeChecker::visit(PrintStatement* s) {
-  s->e->accept(this);
+  //s->e->accept(this);
+  for (auto f :s->e)
+    {
+        f->accept(this);
+    }
+
   sp_decr(1);
   return;
 }

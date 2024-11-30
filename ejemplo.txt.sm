@@ -34,26 +34,6 @@ enter 3
 alloc 0
 push  5
 store 1
-alloc 1
-load 1
-storer 1
-L2: skip
-loadr 1
-push  7
-sub
-jmpz L3
-load 1
-print
-load 1
-push  1
-add
-store 1
-loadr 1
-push  1
-add
-storer 1
-goto L2
-L3: skip
 load 1
 print
 load 2
@@ -64,6 +44,10 @@ mark
 pusha Lfactorial
 call
 store 2
+load 2
+print
+load 1
+print
 load 2
 print
 return 3

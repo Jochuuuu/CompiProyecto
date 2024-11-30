@@ -261,8 +261,18 @@ void ImpInterpreter::visit(AssignStatement* s) {
 }
 
 void ImpInterpreter::visit(PrintStatement* s) {
-    ImpValue v = s->e->accept(this);
-    cout << v << endl;
+    for (auto f :s->e)
+    {
+        ImpValue v = f->accept(this);
+        cout << v << " ";
+    }
+
+
+    cout << endl;
+
+
+   // ImpValue v = s->e->accept(this);
+    //cout << v << endl;
     return;
 }
 

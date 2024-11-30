@@ -166,7 +166,20 @@ void PrintVisitor::visit(PrintStatement *stm)
                 printIndent();
 
     cout << "writeln(";
-    stm->e->accept(this);
+
+short tm = 0;
+
+    for (auto f :stm->e)
+    {
+        if (tm >= 1)
+        {
+            cout << ",";
+        }
+        f->accept(this);
+      tm++;
+    }
+
+ //   stm->e->accept(this);
     cout << ");";
 }
 

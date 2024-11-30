@@ -30,9 +30,13 @@ AssignStatement::AssignStatement(string id, Exp* e): id(id), rhs(e) {}
 AssignStatement::~AssignStatement() {
     delete rhs;
 }
-PrintStatement::PrintStatement(Exp* e): e(e) {}
+PrintStatement::PrintStatement(list<Exp*> e): e(e) {}
 PrintStatement::~PrintStatement() {
-    delete e;
+    //delete e;
+
+    for (auto f: e) {
+        delete f;
+    }
 }
 
 IfStatement::IfStatement(Exp* c, Body* t, Body* e): condition(c), then(t), els(e) {}

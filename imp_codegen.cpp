@@ -164,8 +164,12 @@ void ImpCodeGen::visit(AssignStatement* s) {
 }
 
 void ImpCodeGen::visit(PrintStatement* s) {
-  s->e->accept(this);
-  code << "print" << endl;;
+  for (auto f: s->e) {
+        f->accept(this);
+          code << "print" << endl;;
+
+    }
+  //s->e->accept(this);
   return ;
 }
 

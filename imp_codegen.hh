@@ -38,7 +38,6 @@ public:
   void visit(ForStatement*);
   void visit(FCallStatement*);
   void visit(CommentStatment*){ }
-
   int visit(BinaryExp* e);
   int visit(NumberExp* e);
   int visit(BoolExp* e);
