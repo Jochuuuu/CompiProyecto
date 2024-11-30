@@ -1,21 +1,31 @@
-Program FactorialProgram;
+Program TripletFactorial;
+
+uses hola;
+
 var
-  a, b: integer; 
-function factorial(x: integer): integer;
+  n: integer;
+
+function tripletFactorial(n: integer): integer;
 begin
-  if 1 < x then  
+  if n <= 0 then
   begin
-    factorial := x * factorial(x - 1);
+    tripletFactorial := 1;  // Caso base: si n es menor o igual a 0, devolvemos 1 
   end
   else
   begin
-    factorial := 1;  
+    tripletFactorial := n * tripletFactorial(n - 3);  // Llamada recursiva con n-3 
   end;
 end;
+
 begin
-  a := 5;  
-  writeln(a); // g
-  writeln(b); // aaaaaaaaa
-  b := factorial(a); // comentario
-  writeln(b,a,b); // imprime b a b 
+
+(*(*xd*)*)    {
+{
+    {
+      5
+    }
+  }
+}
+n := 10;  
+ writeln( n,  tripletFactorial(n));
 end.

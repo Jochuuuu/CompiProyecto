@@ -268,7 +268,7 @@ void ImpTypeChecker::visit(ReturnStatement* s) {
 }
 
 void ImpTypeChecker::visit(ForStatement* s) {
-  if(!s->start->accept(this).match(inttype) || !s->end->accept(this).match(inttype) || !s->step->accept(this).match(inttype)) {
+  if(!s->start->rhs->accept(this).match(inttype) || !s->end->accept(this).match(inttype) || !s->step->accept(this).match(inttype)) {
     cout << "Expresiones en for deben de ser int" << endl;
     exit(0);
   }

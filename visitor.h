@@ -25,6 +25,7 @@ class ReturnStatement;
 class FCallExp;
 class FCallStatement;
 class CommentStatment;
+class UsesList;
 
 
 class Visitor {
@@ -49,7 +50,8 @@ public:
     virtual void visit(FunDecList* f) = 0;
     virtual void visit(ReturnStatement* r) = 0;
     virtual void visit(FCallStatement* f) = 0;
-        virtual void visit(CommentStatment* f) = 0;
+    virtual void visit(CommentStatment* f) = 0;
+    virtual void visit(UsesList* f) = 0;
 
 };
 
@@ -76,8 +78,8 @@ public:
     void visit(FunDecList* f) override;
     void visit(ReturnStatement* r) override;
     void visit(FCallStatement* f) override;
-        virtual void visit(CommentStatment* f) override;
-
+    void visit(UsesList* f)  override;
+    void visit(CommentStatment* f) override;
 private:
     int indentLevel = 0;
     string currentFunction;

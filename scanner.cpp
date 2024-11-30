@@ -13,29 +13,122 @@ bool is_white_space(char c)
 }
 
 // lastcomneterio = true
-// a := 5; //         ddfsfd sds 
+// a := 5; //         ddfsfd sds
 Token *Scanner::nextToken()
 {
     Token *token;
-    if (lastcomentario && input[current] == '\n')
+    if (lastcomentario != 'F')
     {
-        token = new Token(Token::ENDLINE);
-        lastcomentario = false;
-        return token;
-    }
-    else if (lastcomentario)
-    {
-        first = current;
-        while (current < input.length() && input[current] != '\n')
+
+        if (current == input.size())
         {
-            current++;
+            token = new Token(Token::ERR);
+            return token;
+        }
+        if (lastcomentario == '/')
+        {
+            if (input[current] == '\n')
+            {
+                token = new Token(Token::ENDLINE);
+                lastcomentario = 'F';
+                return token;
+            }
+            first = current;
+
+            while (current < input.length() && input[current] != '\n')
+            {
+                current++;
+            }
+
+            string word = input.substr(first, current - first);
+            token = new Token(Token::ID, word, 0, word.length());
+            return token;
         }
 
-        string word = input.substr(first, current - first);
-        token = new Token(Token::ID, word, 0, word.length());
+        else if (lastcomentario == '{') // {}
+        {
+            current++;
 
+            if (input[current - 1] == '}')
+            {
+                token = new Token(Token::ENDLINE);
+                lastcomentario = 'F';
+                return token;
+            }
 
-        return token;
+            current = current - 1;
+
+            first = current;
+
+            while (current < input.length())
+            {
+                if (input[current] == '{')
+                {
+                    ++level;
+                }
+                else if (input[current] == '}')
+                {
+                    if (level > 1)
+                    {
+                        level--;
+                    }
+                    else
+                    {
+                        level--;
+                        break;
+                    }
+                }
+                current++;
+            }
+
+            string word = input.substr(first, current - first);
+            token = new Token(Token::ID, word, 0, word.length());
+            return token;
+        }
+        else if (lastcomentario == '(') // Para comentarios del tipo (* *)
+        {
+            current++;
+
+            if (input[current - 1] == '*' && current < input.length() && input[current] == ')')
+            {
+                token = new Token(Token::ENDLINE);
+                lastcomentario = 'F';
+                current += 1;
+                return token;
+            }
+            current = current - 1;
+
+            first = current;
+            while (current < input.length() )
+            {
+
+                 if ((input[current] == '(' && current + 1 < input.length() && input[current + 1] == '*')   )
+                {
+                    current++;
+                    ++level;
+                }
+                else if ((input[current] == '*' && current + 1 < input.length() && input[current + 1] == ')') )
+                {
+                    if (level > 1)
+                    {
+                        level--;
+                    }
+                    else
+                    {
+                        level--;
+                        break;
+                    }
+                }
+
+            
+                current++;
+            }
+
+            string word = input.substr(first, current - first);
+            token = new Token(Token::ID, word, 0, word.length());
+
+            return token;
+        }
     }
 
     while (current < input.length() && is_white_space(input[current]))
@@ -68,6 +161,10 @@ Token *Scanner::nextToken()
         else if (word == "function")
         {
             token = new Token(Token::FUN, word, 0, word.length());
+        }
+         else if (word == "uses")
+        {
+            token = new Token(Token::USES, word, 0, word.length());
         }
         else if (word == "if")
         {
@@ -127,7 +224,7 @@ Token *Scanner::nextToken()
         {
             token = new Token(Token::DO, word, 0, word.length());
         }
-        else if (word == "Program")
+        else if (word == "Program" || word == "program")
         {
             token = new Token(Token::PROGRAM, word, 0, word.length());
         }
@@ -137,7 +234,7 @@ Token *Scanner::nextToken()
         }
     }
     // Detectar operadores y símbolos
-    else if (strchr("+-*/():;,.<", c))
+    else if (strchr("+-*/():;,.<{", c))
     {
         switch (c)
         {
@@ -151,6 +248,7 @@ Token *Scanner::nextToken()
             token = new Token(Token::MINUS, c);
             break;
         case '*':
+
             token = new Token(Token::MUL, c);
             break;
         case '/':
@@ -158,7 +256,8 @@ Token *Scanner::nextToken()
             {
                 token = new Token(Token::COMMENT, "//", 0, 2);
                 current++;
-                lastcomentario = true;
+                lastcomentario = '/';
+                level = 1;
             }
             else
             {
@@ -169,8 +268,24 @@ Token *Scanner::nextToken()
         case ',':
             token = new Token(Token::COMA, c);
             break;
+        case '{':
+            token = new Token(Token::COMMENT, c);
+            lastcomentario = '{';
+            level = 1;
+
+            break;
         case '(':
-            token = new Token(Token::PI, c);
+            if (current + 1 < input.length() && input[current + 1] == '*')
+            {
+                token = new Token(Token::COMMENT, "(*", 0, 2);
+                current++;
+                lastcomentario = '(';
+                level = 1;
+            }
+            else
+            {
+                token = new Token(Token::PI, c);
+            }
             break;
         case ')':
             token = new Token(Token::PD, c);

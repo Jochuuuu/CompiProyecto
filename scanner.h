@@ -6,7 +6,8 @@
 
 class Scanner {
 private:
-    bool lastcomentario = false;
+    char lastcomentario = 'F';
+    int level = 0;
     std::string input;
     int first, current;
 public:

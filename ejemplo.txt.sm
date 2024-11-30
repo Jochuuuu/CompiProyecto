@@ -1,53 +1,46 @@
 start: skip
-enter 2
-alloc 2
+enter 3
+alloc 3
 mark
 pusha Lmain
 call
 halt
-Lfactorial: skip
+LtripletFactorial: skip
 enter 4
 alloc 0
-push  1
 loadr -3
-lt
+push  0
+le
 jmpz L0
-loadr -3
-alloc 1
-loadr -3
 push  1
-sub
-mark
-pusha Lfactorial
-call
-mul
 storer -4
 return 4
 goto L1
 L0: skip
-push  1
+loadr -3
+alloc 1
+loadr -3
+push  3
+sub
+mark
+pusha LtripletFactorial
+call
+mul
 storer -4
 return 4
 L1: skip
 Lmain: skip
 enter 3
 alloc 0
-push  5
-store 1
-load 1
-print
-load 2
+push  10
+storer -3
+loadr -3
 print
 alloc 1
-load 1
+loadr -3
 mark
-pusha Lfactorial
+pusha LtripletFactorial
 call
-store 2
-load 2
 print
-load 1
-print
-load 2
-print
+return 3
 return 3

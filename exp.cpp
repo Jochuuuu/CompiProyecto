@@ -50,7 +50,7 @@ WhileStatement::~WhileStatement() {
     delete condition;
     delete b;
 }
-ForStatement::ForStatement(Exp* s, Exp* e, Exp* st, Body* b): start(s), end(e), step(st), b(b) {}
+ForStatement::ForStatement(AssignStatement* s, Exp* e, Exp* st, Body* b): start(s), end(e), step(st), b(b) {}
 ForStatement::~ForStatement() {
     delete start;
     delete end;
@@ -110,7 +110,7 @@ ReturnStatement::~ReturnStatement() {
 
 
 
-Program::Program(VarDecList* v, FunDecList* f,string n): vardecs(v), fundecs(f), nombre(n) {}
+Program::Program(UsesList* u,VarDecList* v, FunDecList* f,string n): uses(u), vardecs(v), fundecs(f), nombre(n) {}
 
 Program::~Program() {
     delete vardecs;

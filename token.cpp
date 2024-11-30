@@ -53,6 +53,7 @@ std::ostream& operator<<(std::ostream& outs, const Token& tok)
         case Token::DOT: outs << "TOKEN(DOT)"; break;   // Nuevo token para end
         case Token::COMMENT: outs << "TOKEN(COMMENT)"; break;   // Nuevo token para end
         case Token::ENDLINE: outs << "TOKEN(ENDLINE)"; break;   // Nuevo token para end
+        case Token::USES: outs << "TOKEN(USES)"; break;   // Nuevo token para end
 
         //case Token::WRITELN: outs << "TOKEN(WRITELN)"; break; // WRITELN
         default: outs << "TOKEN(UNKNOWN)"; break;

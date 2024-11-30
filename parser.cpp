@@ -71,7 +71,7 @@ VarDec *Parser::parseVarDec()
     {
         cout << "Error: se esperaba un identificador después de 'var'." << endl;
         exit(1);
-    }  
+    }
     ids.push_back(previous->text);
     while (match(Token::COMA))
     { // Procesar múltiples nombres separados por ','
@@ -104,16 +104,16 @@ VarDec *Parser::parseVarDec()
 
 VarDecList *Parser::parseVarDecList()
 {
-   
+
     VarDecList *vdl = new VarDecList();
     while (check(Token::VAR) || check(Token::ID))
-    {  
+    {
         if (check(Token::VAR))
         {
-            advance();  
+            advance();
         }
 
-        VarDec *vd = parseVarDec();  
+        VarDec *vd = parseVarDec();
         if (vd != NULL)
         {
             vdl->add(vd);
@@ -139,7 +139,6 @@ StatementList *Parser::parseStatementList()
             advance();
             continue;
         }
-        
 
         // Parsear una sentencia válida
         Stm *statement = parseStatement();
@@ -152,15 +151,15 @@ StatementList *Parser::parseStatementList()
         if (check(Token::PC))
         {
             advance();
-        }else {
+        }
+        else
+        {
 
-            if (!statement->comentario) 
+            if (!statement->comentario)
             {
-   cout << "se esperaba un ';' despues del stament" << endl;
-            exit(0);
+                cout << "se esperaba un ';' despues del stament" << endl;
+                exit(0);
             }
-
-         
         }
     }
 
@@ -171,8 +170,8 @@ Body *Parser::parseBody()
 {
     VarDecList *vdl = parseVarDecList(); // Procesar las declaraciones de variables
     cout << "Token después de var: " << *current << endl;
-// begin
-// end
+    // begin
+    // end
     if (!match(Token::BEGIN))
     {
         cout << "Error: se esperaba 'begin' después de las declaraciones de variables." << endl;
@@ -203,7 +202,7 @@ FunDec *Parser::parseFunDec()
         }
         else if (previous->text == "function")
         {
-            rtype = "";  
+            rtype = "";
         }
         else
         {
@@ -274,10 +273,10 @@ FunDec *Parser::parseFunDec()
             exit(1);
         }
 
-// function nombnre(params) : tipo;
-// begin
-// end
-// ;
+        // function nombnre(params) : tipo;
+        // begin
+        // end
+        // ;
         // Leer el tipo de retorno para funciones
         if (rtype.empty())
         { // Si es una función
@@ -329,6 +328,45 @@ FunDecList *Parser::parseFunDecList()
     return fdl;
 }
 
+UsesList *Parser::parseUsesList()
+{
+    UsesList *r = NULL;
+
+ 
+
+    if (match(Token::USES))
+    {
+        if (!check(Token::ID))
+        {
+            cout << "se esperaba una libreria" << endl;
+            exit(0);
+        }
+        list<string> libs;
+        while (match(Token::ID))
+        {
+            libs.push_back(previous->text);
+            if (match(Token::COMA))
+            {
+                if (!check(Token::ID))
+                {
+                    cout << "se esperaba un identicador despues de  ','  "  << endl;
+exit(0);
+                }
+            }
+        }
+
+        if (!match(Token::PC))
+        {
+             cout << "se esperaba identificador ';  pero se encontro" << *current << endl;
+            exit(0);
+        }
+        
+        r = new UsesList(libs);
+
+    }
+    return r;
+}
+
 Program *Parser::parseProgram()
 {
 
@@ -356,27 +394,30 @@ Program *Parser::parseProgram()
         exit(1);
     }
 
+    UsesList *u = parseUsesList();
     VarDecList *v = parseVarDecList();
     FunDecList *b = parseFunDecList();
 
-     if (match(Token::BEGIN)) {
-        StatementList* sl = parseStatementList(); 
-        if (!match(Token::END_BLOCK)) {
+    if (match(Token::BEGIN))
+    {
+        StatementList *sl = parseStatementList();
+        if (!match(Token::END_BLOCK))
+        {
             cout << "Error: se esperaba 'END' al final del bloque principal." << endl;
             exit(1);
         }
- if (!match(Token::DOT)) {
+        if (!match(Token::DOT))
+        {
             cout << "Error: se esperaba '.' despues de 'END'." << endl;
             exit(1);
         }
         // Crear un procedimiento 'main' automáticamente
-        Body* mainBody = new Body(new VarDecList(), sl);
-        FunDec* mainFunction = new FunDec("main", list<string>(), list<string>(), "void", mainBody);
+        Body *mainBody = new Body(new VarDecList(), sl);
+        FunDec *mainFunction = new FunDec("main", list<string>(), list<string>(), "void", mainBody);
         b->add(mainFunction);
     }
 
-    
-    return new Program(v, b, nombre_programa);
+    return new Program(u, v, b, nombre_programa);
 }
 
 list<Stm *> Parser::parseStmList()
@@ -404,7 +445,6 @@ Stm *Parser::parseStatement()
         exit(1);
     }
 
- 
     if (check(Token::VAR))
     {
         cout << "Error: 'var' no es válido dentro de un bloque de sentencias. Las declaraciones de variables deben estar antes de 'begin'." << endl;
@@ -461,19 +501,16 @@ Stm *Parser::parseStatement()
             exit(1);
         }
 
-        list<Exp*> go;
+        list<Exp *> go;
 
-        
         e = parseCExp();
 
         go.push_back(e);
 
         while (match(Token::COMA))
         {
-          go.push_back(parseCExp());
-
+            go.push_back(parseCExp());
         }
-        
 
         if (!match(Token::PD))
         {
@@ -520,12 +557,12 @@ Stm *Parser::parseStatement()
             fb = parseBody();
         }
 
-// if algo do
-//   begin
-//   end
-// else 
-//   begin
-//   end;
+        // if algo do
+        //   begin
+        //   end
+        // else
+        //   begin
+        //   end;
 
         else
         {
@@ -561,42 +598,53 @@ Stm *Parser::parseStatement()
 
     else if (match(Token::FOR))
     {
-       
-        if (!check(Token::ID))
-    {
-        cout << "Error: Se esperaba un identificador después de 'for'." << endl;
-        exit(1);
-    }
-        Exp *start = parseCExp();
+
+        if (!match(Token::ID))
+        {
+            cout << "Error: Se esperaba un identificador después de 'for'." << endl;
+            exit(1);
+        }
+
+        string varName = previous->text;
+        AssignStatement *ns;
+
+        if (match(Token::ASSIGN))
+        {
+            Exp *desps = parseCExp();
+            ns = new AssignStatement(varName, desps);
+        }
+        else
+        {
+            ns = new AssignStatement(varName, new IdentifierExp(varName));
+        }
 
         // for ID to 10 do
         // begin
         // writln(5);
         // end
 
-    // Capturar el nombre del identificador
-    string varName = previous->text; // `previous` guarda el último token válido
-    IdentifierExp *loopVar = new IdentifierExp(varName);
+        // Capturar el nombre del identificador
+        // string varName = previous->text; // `previous` guarda el último token válido
+        // IdentifierExp *loopVar = new IdentifierExp(varName);
         if (!match(Token::TO))
         {
             cout << "Error: se esperaba 'to' después de la expresión." << endl;
             exit(1);
         }
         Exp *end = parseCExp();
-      if (!match(Token::DO))
+        if (!match(Token::DO))
         {
             cout << "Error: se esperaba 'do' después de la expresión." << endl;
             exit(1);
         }
-       
-        tb = parseBody();
-     BinaryExp *increment = new BinaryExp(loopVar, new NumberExp(1), PLUS_OP); // ID + 1
-    AssignStatement *incrementStmt = new AssignStatement(varName, increment); // ID = ID + 1
-tb->slist->add(incrementStmt);
 
-    // Crear la declaración de bucle
-    s = new ForStatement(loopVar, end, new NumberExp(1), tb);
-    
+        tb = parseBody();
+        //  BinaryExp *increment = new BinaryExp(loopVar, new NumberExp(1), PLUS_OP); // ID + 1
+        //  AssignStatement *incrementStmt = new AssignStatement(varName, increment); // ID = ID + 1
+        //  tb->slist->add(incrementStmt);
+
+        // Crear la declaración de bucle
+        s = new ForStatement(ns, end, new NumberExp(1), tb);
     }
     else if (match(Token::RETURN))
     {
@@ -616,36 +664,37 @@ tb->slist->add(incrementStmt);
         }
         s = new ReturnStatement(e); // Si es null, no hay problema
     }
-    else    if (match(Token::COMMENT))
+    else if (match(Token::COMMENT))
     {
+        string comentario = previous->text;
+
         if (match(Token::ID))
         {
             string lol = previous->text;
 
             if (match(Token::ENDLINE))
             {
-                    s = new CommentStatment(lol);
-
-            }else {
+                s = new CommentStatment(lol, comentario);
+            }
+            else
+            {
                 exit(0);
             }
-        }else 
+        }
+        else
         {
-          if(match(Token::ENDLINE))
-          {
-             s = new CommentStatment(" ");
-
-          }
-          else {
-                 cout << "ERROR " << endl;
+            if (match(Token::ENDLINE))
+            {
+                s = new CommentStatment(" ", comentario);
+            }
+            else
+            {
+                cout << "ERROR " << endl;
                 exit(0);
-
-          }
-
+            }
         }
     }
 
-    
     else
     {
         cout << "Error: Se esperaba un identificador o 'print', pero se encontró: " << *current << endl;

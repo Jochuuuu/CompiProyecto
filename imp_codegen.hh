@@ -44,6 +44,7 @@ public:
   int visit(IdentifierExp* e);
   int visit(IFExp* e);
   int visit(FCallExp* e);
+  void visit(UsesList* e) {}
 
 private:
   ImpTypeChecker* analysis;

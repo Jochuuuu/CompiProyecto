@@ -163,30 +163,38 @@ void PrintVisitor::visit(AssignStatement *stm)
 
 void PrintVisitor::visit(PrintStatement *stm)
 {
-                printIndent();
+    printIndent();
 
     cout << "writeln(";
 
-short tm = 0;
+    short tm = 0;
 
-    for (auto f :stm->e)
+    for (auto f : stm->e)
     {
         if (tm >= 1)
         {
             cout << ",";
         }
         f->accept(this);
-      tm++;
+        tm++;
     }
 
- //   stm->e->accept(this);
+    //   stm->e->accept(this);
     cout << ");";
 }
 
 void PrintVisitor::visit(CommentStatment *stm)
 {
-    cout << "//";
-    cout << stm->id ;
+    cout << stm->inicio;
+    cout << stm->id;
+    if (stm->inicio == "{")
+    {
+        cout << "}";
+    }
+    else if (stm->inicio == "(*")
+    {
+        cout << "*)";
+    }
 }
 
 void PrintVisitor::visit(IfStatement *stm)
@@ -202,8 +210,8 @@ void PrintVisitor::visit(IfStatement *stm)
     {
         printIndent();
         cout << endl;
-                printIndent();
-                cout << "end" << endl;
+        printIndent();
+        cout << "end" << endl;
         printIndent();
         cout << "else" << endl;
         printIndent();
@@ -212,8 +220,8 @@ void PrintVisitor::visit(IfStatement *stm)
         stm->els->accept(this);
         printIndent();
         cout << endl;
-                        printIndent();
-cout << "end;" << endl;
+        printIndent();
+        cout << "end;" << endl;
     }
     else
     {
@@ -228,8 +236,30 @@ void PrintVisitor::imprimir(Program *program)
     program->accept(this);
 }
 
+void PrintVisitor::visit(UsesList *stm)
+{
+    if (stm->uist.size() > 0)
+    {
+        printIndent();
+
+        cout << "uses ";
+
+        for (auto i : stm->uist)
+        {
+            printIndent();
+            cout << i;
+            if (i != stm->uist.back())
+            {
+                cout << ", ";
+            }
+        }
+        cout << ";" << endl;
+    }
+};
+
 void PrintVisitor::visit(Program *program)
 {
+    program->uses->accept(this);
     program->vardecs->accept(this);
     program->fundecs->accept(this);
 };
@@ -252,7 +282,7 @@ void PrintVisitor::visit(WhileStatement *stm)
     stm->condition->accept(this);
     cout << " do" << endl;
     printIndent();
-    cout << "begin" << endl;
+    // cout << "begin" << endl;
     stm->b->accept(this);
     printIndent();
     cout << "end;";
@@ -261,12 +291,23 @@ void PrintVisitor::visit(WhileStatement *stm)
 void PrintVisitor::visit(ForStatement *stm)
 {
     cout << "for ";
-    stm->start->accept(this);
+
+    cout << stm->start->id << " := ";
+    stm->start->rhs->accept(this);
+
+    //  stm->start->accept(this);
     cout << " to ";
     stm->end->accept(this);
     cout << " do" << endl;
-    cout << " begin" << endl;
+
+    // cout << "  begin" << endl;
+    printIndent();
+
     stm->b->accept(this);
+
+    cout << endl;
+    printIndent();
+
     cout << "end;";
 }
 
@@ -303,7 +344,6 @@ void PrintVisitor::visit(VarDecList *stm)
     if (stm->vardecs.size() > 0)
     {
         printIndent();
-
     }
 }
 
@@ -328,6 +368,7 @@ void PrintVisitor::visit(Body *stm)
     increaseIndent();
     stm->vardecs->accept(this);
 
+    cout << "begin" << endl;
     stm->slist->accept(this);
     decreaseIndent();
 }
@@ -368,9 +409,9 @@ void PrintVisitor::visit(FunDec *stm)
             cout << ")" << endl;
         }
     }
-    cout << "begin" << endl;
     stm->body->accept(this);
-    cout << endl << "end";
+    cout << endl
+         << "end";
     cout << (stm->fname == "main" ? "." : ";");
 
     currentFunction = "";
@@ -381,7 +422,8 @@ void PrintVisitor::visit(FunDecList *stm)
     for (auto i : stm->flist)
     {
         i->accept(this);
-        cout << endl;
+        cout << endl
+             << endl;
     }
 }
 
