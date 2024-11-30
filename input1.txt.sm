@@ -10,6 +10,7 @@ enter 1
 alloc 0
 loadr -3
 print
+return 4
 Lmain: skip
 enter 3
 alloc 0
@@ -43,4 +44,5 @@ load 1
 mark
 pusha Lfac
 call
+return 3
 return 3

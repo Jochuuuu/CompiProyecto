@@ -137,15 +137,15 @@ StatementList *Parser::parseStatementList()
         
 
         // Parsear una sentencia válida
-        cout << "empiezo en " << current << endl; 
+       // cout << "empiezo en " << current << endl; 
         Stm *statement = parseStatement();
         if (statement != NULL)
         {
             sl->add(statement);
         }
-        cout << "terkmino en " << previous << endl; 
+     //   cout << "terkmino en " << previous << endl; 
 
-        cout << "ahora es " << *current << " antes " << *previous << endl;
+      //  cout << "ahora es " << *current << " antes " << *previous << endl;
       
         if (check(Token::PC))
         {
