@@ -1,0 +1,32 @@
+Program fibooo;
+var
+  a, b: integer; 
+
+procedure imprime(x :integer);
+begin
+writeln(x);
+end;
+
+function fibo(x: integer): integer;
+begin
+  if x < 2 then  
+  begin
+    fibo := x; // Caso base
+  end
+  else
+  begin
+    fibo :=  (0 + ( fibo(x - 1) + fibo(x - 2)) ); // Recursión
+  end;
+end;
+
+begin
+  a := 15;  {{ 
+     a = 15
+  }}
+  
+  b := fibo(a);  (*
+
+    b = fibo (a) *)
+  imprime(a);
+  writeln(b,a, b); // Imprime b, a, b
+end.

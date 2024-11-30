@@ -1,0 +1,68 @@
+start: skip
+enter 2
+alloc 2
+mark
+pusha Lmain
+call
+halt
+Limprime: skip
+enter 1
+alloc 0
+loadr -3
+print
+return 4
+Lfibo: skip
+enter 6
+alloc 0
+loadr -3
+push  2
+lt
+jmpz L0
+loadr -3
+storer -4
+return 4
+goto L1
+L0: skip
+push  0
+alloc 1
+loadr -3
+push  1
+sub
+mark
+pusha Lfibo
+call
+alloc 1
+loadr -3
+push  2
+sub
+mark
+pusha Lfibo
+call
+add
+add
+storer -4
+return 4
+L1: skip
+Lmain: skip
+enter 3
+alloc 0
+push  15
+store 1
+alloc 1
+load 1
+mark
+pusha Lfibo
+call
+store 2
+load 1
+mark
+pusha Limprime
+call
+load 2
+print
+load 1
+print
+load 2
+print
+return 3
+return 3
