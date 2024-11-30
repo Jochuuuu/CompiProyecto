@@ -50,7 +50,7 @@ WhileStatement::~WhileStatement() {
     delete condition;
     delete b;
 }
-ForStatement::ForStatement(AssignStatement* s, Exp* e, Exp* st, Body* b): start(s), end(e), step(st), b(b) {}
+ForStatement::ForStatement(AssignStatement* s, Exp* e, Exp* st, Body* b,bool d = false): start(s), end(e), step(st), b(b),downto(d) {}
 ForStatement::~ForStatement() {
     delete start;
     delete end;

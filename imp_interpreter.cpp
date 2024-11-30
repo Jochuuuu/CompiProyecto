@@ -320,14 +320,18 @@ void ImpInterpreter::visit(ForStatement* s) {
         exit(0);
     }
     int a = start.int_value;
-    while(a <= end.int_value){
+    while((s->downto ? a >= end.int_value : a <= end.int_value)){
         ImpValue xd = (new NumberExp(a))->accept(this);
         env.update(s->start->id, xd );
 
         s->b ->accept(this);
-        a += paso.int_value;
+     //   a += paso.int_value;
        // cout << start.int_value << "+"  << paso.int_value << "|";
-
+if (s->downto) {
+        a -= paso.int_value; // Decremento para downto
+    } else {
+        a += paso.int_value; // Incremento para to
+    }
     }
     return;
 }

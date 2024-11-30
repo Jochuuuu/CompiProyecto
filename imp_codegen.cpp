@@ -160,7 +160,7 @@ void ImpCodeGen::visit(FunDec *fd)
 
   if (fd->rtype == "void")
   {
-    codegen(nolabel,"return",num_params+3);
+    codegen(nolabel, "return", num_params + 3);
   }
 
   return;
@@ -276,34 +276,99 @@ void ImpCodeGen::visit(ForStatement *s)
   codegen(l1, "skip");
 
   // Evaluar la condición
-  if (ventry.is_global)
+
+  if (!s->downto)
   {
-    codegen(nolabel, "load", ventry.dir);
+    if (ventry.is_global)
+    {
+      codegen(nolabel, "load", ventry.dir);
+    }
+    else
+    {
+      codegen(nolabel, "loadr", ventry.dir);
+    }
+    s->end->accept(this);
+    codegen(nolabel, "le");
   }
   else
   {
-    codegen(nolabel, "loadr", ventry.dir);
+    s->end->accept(this);
+    if (ventry.is_global)
+    {
+      codegen(nolabel, "load", ventry.dir);
+    }
+    else
+    {
+      codegen(nolabel, "loadr", ventry.dir);
+    }
+    codegen(nolabel, "le");
   }
 
-  s->end->accept(this);
-  codegen(nolabel, "le");
+  /*
+   if (ventry.is_global)
+    {
+      codegen(nolabel, "load", ventry.dir);
+    }
+    else
+    {
+      codegen(nolabel, "loadr", ventry.dir);
+    }
+
+    s->end->accept(this);
+    codegen(nolabel, "le");
+  */
+
   codegen(nolabel, "jmpz", l2);
 
   // Ejecutar el cuerpo del bucle // "print"
   s->b->accept(this);
 
-  // para que si llega al final no aumente + 1 
-  s->end->accept(this);
+  // para que si llega al final no aumente + 1
 
-  if (ventry.is_global)
+  if (!s->downto)
   {
-    codegen(nolabel, "load", ventry.dir);
+    s->end->accept(this);
+    if (ventry.is_global)
+    {
+      codegen(nolabel, "load", ventry.dir);
+    }
+    else
+    {
+      codegen(nolabel, "loadr", ventry.dir);
+    }
+
+    codegen(nolabel, "le");
   }
   else
   {
-    codegen(nolabel, "loadr", ventry.dir);
+
+    if (ventry.is_global)
+    {
+      codegen(nolabel, "load", ventry.dir);
+    }
+    else
+    {
+      codegen(nolabel, "loadr", ventry.dir);
+    }
+    s->end->accept(this);
+
+    codegen(nolabel, "le");
   }
-  codegen(nolabel, "le");
+  /*
+   s->end->accept(this);
+
+    if (ventry.is_global)
+    {
+      codegen(nolabel, "load", ventry.dir);
+    }
+    else
+    {
+      codegen(nolabel, "loadr", ventry.dir);
+    }
+
+    codegen(nolabel, "le");
+  */
+
   codegen(nolabel, "jmpz", l3);
   codegen(nolabel, "goto", l2);
   codegen(l3, "skip");
@@ -319,7 +384,14 @@ void ImpCodeGen::visit(ForStatement *s)
   }
 
   s->step->accept(this);
-  codegen(nolabel, "add");
+  if (!s->downto)
+  {
+    codegen(nolabel, "add");
+  }
+  else
+  {
+    codegen(nolabel, "sub");
+  }
   if (ventry.is_global)
   {
     codegen(nolabel, "store", ventry.dir);

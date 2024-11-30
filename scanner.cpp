@@ -183,6 +183,11 @@ Token *Scanner::nextToken()
             token = new Token(Token::ELSE, word, 0, word.length());
         }
 
+         else if (word == "downto")
+        {
+            token = new Token(Token::DOWNTO, word, 0, word.length());
+        }
+
         else if (word == "for")
         {
             token = new Token(Token::FOR, word, 0, word.length());

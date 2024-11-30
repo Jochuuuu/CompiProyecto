@@ -194,10 +194,11 @@ class ForStatement : public Stm
 {
 public:
     AssignStatement *start;
+    bool downto;
     Exp *end;
     Exp *step;
     Body *b;
-    ForStatement(AssignStatement *start, Exp *end, Exp *step, Body *b);
+    ForStatement(AssignStatement *start, Exp *end, Exp *step, Body *b,bool d);
     int accept(Visitor *visitor);
     void accept(ImpValueVisitor *v);
     void accept(TypeVisitor *v);

@@ -134,33 +134,26 @@ StatementList *Parser::parseStatementList()
 
     while (!check(Token::END_BLOCK))
     { // Procesar hasta encontrar 'end'
-        if (check(Token::PC))
-        { // Ignorar ';' solitario
-            advance();
-            continue;
-        }
+        
 
         // Parsear una sentencia válida
+        cout << "empiezo en " << current << endl; 
         Stm *statement = parseStatement();
         if (statement != NULL)
         {
             sl->add(statement);
         }
+        cout << "terkmino en " << previous << endl; 
 
-        // Si el próximo token es ';', lo avanzamos
+        cout << "ahora es " << *current << " antes " << *previous << endl;
+      
         if (check(Token::PC))
         {
             advance();
         }
-        else
-        {
 
-            if (!statement->comentario)
-            {
-                cout << "se esperaba un ';' despues del stament" << endl;
-                exit(0);
-            }
-        }
+
+      
     }
 
     return sl;
@@ -332,8 +325,6 @@ UsesList *Parser::parseUsesList()
 {
     UsesList *r = NULL;
 
- 
-
     if (match(Token::USES))
     {
         if (!check(Token::ID))
@@ -349,20 +340,19 @@ UsesList *Parser::parseUsesList()
             {
                 if (!check(Token::ID))
                 {
-                    cout << "se esperaba un identicador despues de  ','  "  << endl;
-exit(0);
+                    cout << "se esperaba un identicador despues de  ','  " << endl;
+                    exit(0);
                 }
             }
         }
 
         if (!match(Token::PC))
         {
-             cout << "se esperaba identificador ';  pero se encontro" << *current << endl;
+            cout << "se esperaba identificador ';  pero se encontro" << *current << endl;
             exit(0);
         }
-        
-        r = new UsesList(libs);
 
+        r = new UsesList(libs);
     }
     return r;
 }
@@ -539,6 +529,7 @@ Stm *Parser::parseStatement()
 
         // Parsear el bloque verdadero (tb)
         tb = parseBody();
+        cout << "saliendo del if llegue coon " << current << endl;
         if (match(Token::PC))
         {
 
@@ -551,8 +542,10 @@ Stm *Parser::parseStatement()
 
         cout << previous->text << endl;
         // Verificar si hay un 'else'
+        bool hay_else = false;
         if (match(Token::ELSE))
         {
+            hay_else = true;
             // Parsear el bloque falso (fb)
             fb = parseBody();
         }
@@ -563,11 +556,20 @@ Stm *Parser::parseStatement()
         // else
         //   begin
         //   end;
+        if (!hay_else)
+        {
+            if (!(previous->type == Token::PC))
+            {
+                cout << "Error: se esperaba ';' después de la expresión." << endl;
+                exit(1);
+            }
+        }
 
         else
         {
 
-            if (!(previous->type == Token::PC))
+            cout << "ahora que bro " << current << " | " << previous << endl;
+            if (!(current->type == Token::PC))
             {
                 cout << "Error: se esperaba ';' después de la expresión." << endl;
                 exit(1);
@@ -626,11 +628,16 @@ Stm *Parser::parseStatement()
         // Capturar el nombre del identificador
         // string varName = previous->text; // `previous` guarda el último token válido
         // IdentifierExp *loopVar = new IdentifierExp(varName);
-        if (!match(Token::TO))
+
+        bool esdownto = (check(Token::DOWNTO)) ? true : false;
+
+        if (!match(Token::TO) && !match(Token::DOWNTO))
         {
-            cout << "Error: se esperaba 'to' después de la expresión." << endl;
+            cout << "Error: se esperaba 'to' or 'downto' después de la expresión." << endl;
             exit(1);
         }
+
+        
         Exp *end = parseCExp();
         if (!match(Token::DO))
         {
@@ -644,7 +651,7 @@ Stm *Parser::parseStatement()
         //  tb->slist->add(incrementStmt);
 
         // Crear la declaración de bucle
-        s = new ForStatement(ns, end, new NumberExp(1), tb);
+        s = new ForStatement(ns, end, new NumberExp(1), tb,esdownto);
     }
     else if (match(Token::RETURN))
     {

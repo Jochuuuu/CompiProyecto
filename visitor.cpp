@@ -203,7 +203,6 @@ void PrintVisitor::visit(IfStatement *stm)
     stm->condition->accept(this);
     cout << " then" << endl;
     printIndent();
-    cout << "begin" << endl;
 
     stm->then->accept(this);
     if (stm->els)
@@ -216,7 +215,6 @@ void PrintVisitor::visit(IfStatement *stm)
         cout << "else" << endl;
         printIndent();
 
-        cout << "begin" << endl;
         stm->els->accept(this);
         printIndent();
         cout << endl;
@@ -238,6 +236,8 @@ void PrintVisitor::imprimir(Program *program)
 
 void PrintVisitor::visit(UsesList *stm)
 {
+    if (!stm) {return;}
+
     if (stm->uist.size() > 0)
     {
         printIndent();
@@ -296,7 +296,9 @@ void PrintVisitor::visit(ForStatement *stm)
     stm->start->rhs->accept(this);
 
     //  stm->start->accept(this);
-    cout << " to ";
+    if (stm->downto)
+    {    cout << " downto ";
+} else {    cout << " to ";}
     stm->end->accept(this);
     cout << " do" << endl;
 
